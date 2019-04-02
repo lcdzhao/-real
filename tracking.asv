@@ -234,8 +234,7 @@ for loopCnt =  1:codePeriods
         past_Q_accum = Q_P;   
         
         %这是最后的问题
-        %锁频环和锁相环的搭配，即一阶FLL辅助二阶PLL，《软件接收机原理》一书在P90页
-        %写出了最后的方法。需要学习。
+        %锁频环和锁相环的搭配，即一阶FLL辅助二阶PLL，《软件接收机原理》书P90
         carrNco = oldCarrNco + carrError;
 
     else
