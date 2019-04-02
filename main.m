@@ -43,7 +43,7 @@ acqResults = acquisition(receivedL1,settings);
 
 channel = preRun(acqResults,settings);
 showChannelStatus(channel,settings);
-[trackResults, channel,outData] = track(0,channel,settings,data);
+[trackResults, channel,outData] = tracking(0,channel,settings,eceivedL1);
 %[subFrameStart, activeChnList] = findPreambles(trackResults, settings);
  
 
