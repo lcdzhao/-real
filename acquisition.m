@@ -1,4 +1,4 @@
-function acqResults = acquisition1(longSignal, settings)
+function acqResult = acquisition(longSignal, settings)
 %Function performs cold start acquisition on the collected "data". It
 %searches for GPS signals of all satellites, which are listed in field
 %"acqSatelliteList" in the settings structure. Function saves code phase
@@ -72,7 +72,7 @@ phasePoints = (0 : (samplesPerCode-1)) * 2 * pi * ts;
 numberOfFrqBins = round(settings.acqSearchBand * 2) + 1;
 
 % Generate all C/A codes and sample them according to the sampling freq.
-caCodeTable = makeCaTable(18,settings.codeLength,settings.codeFreqBasis ,settings.samplingFreq);
+caCodeTable = makeCaTable(settings.PRN,settings.codeLength,settings.codeFreqBasis ,settings.samplingFreq);
 
 
 %--- Initialize arrays to speed up the code -------------------------------
@@ -83,18 +83,6 @@ results     = zeros(numberOfFrqBins, samplesPerCode);
 frqBins     = zeros(1, numberOfFrqBins);
 
 
-%--- Initialize acqResults ------------------------------------------------
-% Carrier frequencies of detected signals
-acqResults.carrFreq     = zeros(1, 32);
-% C/A code phases of detected signals
-acqResults.codePhase    = zeros(1, 32);
-% Correlation peak ratios of the detected signals
-acqResults.peakMetric   = zeros(1, 32);
-
-fprintf('');
-
-% Perform search for all listed PRN numbers ...
-PRN = 18;
 
 %% Correlate signals ======================================================   
     %--- Perform DFT of C/A code ------------------------------------------
@@ -105,7 +93,7 @@ PRN = 18;
     for frqBinIndex = 1:numberOfFrqBins
 
         %--- 生成载波频率网格（0.5KHz步进） -----------
-        frqBins(frqBinIndex) = settings.IF - ...
+        frqBins(frqBinIndex) = settings.IF1 - ...
                                (settings.acqSearchBand/2) * 1000 + ...
                                0.5e3 * (frqBinIndex - 1);
 
@@ -176,7 +164,7 @@ PRN = 18;
     secondPeakSize = max(results(frequencyBinIndex, codePhaseRange));
 
     %--- Store result -----------------------------------------------------
-    acqResults.peakMetric(PRN) = peakSize/secondPeakSize;
+    acqResult.peakMetric = peakSize/secondPeakSize;
     
     % If the result is above threshold, then there is a signal ...
     if (peakSize/secondPeakSize) > settings.acqThreshold
@@ -219,8 +207,8 @@ PRN = 18;
 %         fftFreqBins = (0 : uniqFftPts-1) * settings.samplingFreq/fftNumPts;
 %         
 %         %--- Save properties of the detected satellite signal -------------
-         acqResults.carrFreq(PRN)  = frqBins(frequencyBinIndex);
-         acqResults.codePhase(PRN) = codePhase;
+         acqResult.carrFreq  = frqBins(frequencyBinIndex);
+         acqResult.codePhase = codePhase;
 %         str=['精频捕获为=' num2str(acqResults.carrFreq(PRN))];
 %         disp(str);
     else

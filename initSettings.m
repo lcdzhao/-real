@@ -46,6 +46,8 @@ settings.msToProcess        = 1000;        %[ms]需要处理的毫秒数
 % Number of channels to be used for signal processing
 settings.numberOfChannels   = 1;    %通道数（即卫星个数）
 
+settings.PRN = 18;
+
 % Move the starting point of processing. Can be used to start the signal
 % processing at any point in the data record (e.g. for long records). fseek
 % function is used to move the file read point, therefore advance is byte
@@ -98,7 +100,7 @@ settings.pllNoiseBandwidth       = 25;      %[Hz]
 settings.navSolPeriod       = 20;          %[ms]
 
 
-settings.K_step = 300;                     %FLL转向PLL时间
+settings.K_step = 0;                     %FLL转向PLL时间
 %% Plot settings ==========================================================
 % Enable/disable plotting of the tracking results for each channel
 settings.plotTracking       = 1;            % 0 - Off
