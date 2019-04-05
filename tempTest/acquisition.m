@@ -1,54 +1,4 @@
 function acqResult = acquisition(longSignal, settings)
-%Function performs cold start acquisition on the collected "data". It
-%searches for GPS signals of all satellites, which are listed in field
-%"acqSatelliteList" in the settings structure. Function saves code phase
-%and frequency of the detected signals in the "acqResults" structure.
-%函数对收集到的数据执行“冷启动捕获？”，它搜索所有卫星的GPS信号，这些卫星在设置的结构体的
-%“acqSatelliteList”列出。函数把码相位和所检测到的信号的频率保存在“acqResults”结构体中。
-%
-%acqResults = acquisition(longSignal, settings)
-%
-%   Inputs:
-%       longSignal    - 11 ms of raw signal from the front-end
-%       来自前端的11ms原始信号
-%       settings      - Receiver settings. Provides information about
-%                       sampling and intermediate frequencies and other
-%                       parameters including the list of the satellites to
-%                       be acquired.
-%                       -接收机设置。提供关于采样和中频信息，还有其他参数，包括可捕获卫星列表
-%   Outputs:
-%       acqResults    - Function saves code phases and frequencies of the 
-%                       detected signals in the "acqResults" structure. The
-%                       field "carrFreq" is set to 0 if the signal is not
-%                       detected for the given PRN number. 
-%       捕获结果        -函数把码相位和所检测到的信号的频率保存在“acqResults”结构体中。
-%                       如果对于给定的PRN号检测不到信号则将“carrFreq（载波频率）”置为0.
-%--------------------------------------------------------------------------
-%                           SoftGNSS v3.0
-% 
-% Copyright (C) Darius Plausinaitis and Dennis M. Akos
-% Written by Darius Plausinaitis and Dennis M. Akos
-% Based on Peter Rinder and Nicolaj Bertelsen
-%--------------------------------------------------------------------------
-%This program is free software; you can redistribute it and/or
-%modify it under the terms of the GNU General Public License
-%as published by the Free Software Foundation; either version 2
-%of the License, or (at your option) any later version.
-%
-%This program is distributed in the hope that it will be useful,
-%but WITHOUT ANY WARRANTY; without even the implied warranty of
-%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-%GNU General Public License for more details.
-%
-%You should have received a copy of the GNU General Public License
-%along with this program; if not, write to the Free Software
-%Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
-%USA.
-%--------------------------------------------------------------------------
-
-%CVS record:
-%$Id: acquisition.m,v 1.1.2.12 2006/08/14 12:08:03 dpl Exp $
-
 %% Initialization =========================================================
 
 % Find number of samples per spreading code     对于每个扩频码求采样数
@@ -168,11 +118,11 @@ frqBins     = zeros(1, numberOfFrqBins);
     
     % If the result is above threshold, then there is a signal ...
     if (peakSize/secondPeakSize) > settings.acqThreshold
-        figure(6);
-        plot(max(results));
-        title('获取伪码的起始点');
-        str=['粗频捕获为=' num2str(frqBins(frequencyBinIndex))];
-        disp(str);
+%        figure(6);
+%        plot(max(results));
+%        title('获取伪码的起始点');
+%        str=['粗频捕获为=' num2str(frqBins(frequencyBinIndex))];
+%        disp(str);
 
 
 %% 精细分辨率频率搜索 （暂时不精频了）=======================================
@@ -213,10 +163,10 @@ frqBins     = zeros(1, numberOfFrqBins);
 %         disp(str);
     else
         %--- No signal with this PRN --------------------------------------
-        fprintf('. ');
+        %fprintf('. ');
     end   % if (peakSize/secondPeakSize) > settings.acqThreshold
     
 
 
 %=== Acquisition is over ==================================================
-fprintf(')\n');
+%fprintf(')\n');
