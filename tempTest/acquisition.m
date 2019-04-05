@@ -57,8 +57,8 @@ samplesPerCode = round(settings.samplingFreq / ...
 
 % Create two 1msec vectors of data to correlate with and one with zero DC
 %产生两1ms的数据矢量？？？
-signal1 = longSignal(samplesPerCode+1 : 2*samplesPerCode);
-signal2 = longSignal(2*samplesPerCode+1 : 3*samplesPerCode);
+signal1 = longSignal(1 : samplesPerCode);
+signal2 = longSignal(samplesPerCode+1 : 2*samplesPerCode);
 
 signal0DC = longSignal - mean(longSignal); 
 

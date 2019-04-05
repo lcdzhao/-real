@@ -23,13 +23,11 @@ t = (0:(length(spread_code) - 1))/settings.samplingFreq;
 sendeddataL1=spread_code.*cos(2*pi*settings.IF1.*t);     %L1,搭载伪码
 sendeddataL2=cos(2*pi*settings.IF2.*t);                  %L2,不搭载伪码
 sendeddata = sendeddataL1 + sendeddataL2;
-
-
 % 加噪声
 data= awgn(sendeddata, -10); %加-20db分贝的白噪声
 
 %接收信号并把L1和L2分开
-%[receivedL1,receivedL2] = separateSignal(data,settings.samplingFreq);
+[receivedL1,receivedL2] = separateSignal(data,settings.samplingFreq);
 %捕获L1并获取伪码起始点和0.5
 acqResult = acquisition(data,settings);
 
