@@ -44,9 +44,9 @@ for loopNum = 1 : settings.msToProcess
     carrNcoPhase = mod(carrierNcoSum,2^settings.ncoLength) * 2 * pi;  
     if carrNcoPhase > pi*2^settings.ncoLength
         trackResult.carrNcoPhases(loopNum) = ...
-             ((carrNcoPhase - 2*pi*2^settings.ncoLength)/2*pi);
+             (carrNcoPhase - 2*pi*2^settings.ncoLength)/2 * pi;
     else
-        trackResult.carrNcoPhases(loopNum) = (carrNcoPhase/2*pi);
+        trackResult.carrNcoPhases(loopNum) = carrNcoPhase/2 * pi;
     end
     trackResult.codeNcoPhases(loopNum) = ...
         ((((earlyCodeNco)/settings.codeLength)*settings.samplesPerCode...
