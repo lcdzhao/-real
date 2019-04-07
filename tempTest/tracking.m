@@ -23,7 +23,7 @@ trackResult.pllDiscrFilter = zeros(1,settings.msToProcess);
 
 Tcoh = settings.Tcoh;          %积分清零时间
 global earlyCodeNco;      %是接收端的，因为早码的话，即时码和晚码都可以从其中而来
-earlyCodeNco = ((1 - (acqResult.codePhase-3)/settings.samplesPerCode)...
+earlyCodeNco = ((1 - (acqResult.codePhase-settings.dllCorrelatorLength)/settings.samplesPerCode)...
     *settings.codeLength) * 2^settings.ncoLength;
 earlyCodeNco = mod(earlyCodeNco,2^settings.ncoLength*1023);
 localEarlyCodeLast = localEarlycodeInitial(settings,codeTable); %产生本地超前码，接收端使用，因为早码的话，即时码和晚码都可以从其中而来
@@ -32,8 +32,8 @@ trackResult.carrNcoPhases = zeros(1,settings.msToProcess);       %每次积分清零前
 trackResult.codeNcoPhases = zeros(1,settings.msToProcess);       %每次积分清零前B1码的nco相位,未经过转换
 trackResult.carrFreq = zeros(1,settings.msToProcess);
 trackResult.trackFlag = 0;                  %捕获成功标志位
-blksize = settings.samplesPerCode;
-startCountPhase = -100;
+blksize = settings.codeSplitSpace * settings.samplesPerCode;
+startCountPhase = -150;
 carrStartPhaseSum = 0;
 codeStartPhaseSum = 0;
 for loopNum = 1 : settings.msToProcess
@@ -41,22 +41,21 @@ for loopNum = 1 : settings.msToProcess
     
     
     
-    carrNcoPhase = mod(carrierNcoSum,2^settings.ncoLength) * 2 * pi;  
-    if carrNcoPhase > pi*2^settings.ncoLength
-        trackResult.carrNcoPhases(loopNum) = ...
-             (carrNcoPhase - 2*pi*2^settings.ncoLength)/2 * pi;
-    else
-        trackResult.carrNcoPhases(loopNum) = carrNcoPhase/2 * pi;
-    end
+    carrNcoPhase = mod(carrierNcoSum,2^settings.ncoLength);  
+    trackResult.carrNcoPhases(loopNum) = carrNcoPhase;
+    
     trackResult.codeNcoPhases(loopNum) = ...
         ((((earlyCodeNco)/settings.codeLength)*settings.samplesPerCode...
-         -2.5*2^settings.ncoLength) /settings.samplesPerCode)*settings.codeLength;       
-    trackResult.carrFreq(loopNum) = ...
+         -(settings.dllCorrelatorLength)*2^settings.ncoLength) /settings.samplesPerCode)*settings.codeLength...
+         - mod(loopNum,1/settings.codeSplitSpace) * settings.codeLength * 2^settings.ncoLength ;       
+    
+     
+     trackResult.carrFreq(loopNum) = ...
          (settings.middleFreqNco1 + fllNcoAdder + pllNcoAdder)/settings.transferCoef;
     trackResult.flag(loopNum) = settings.PLLFlag;         %标识该次循环有没有进行PLL锁定
     %读取接收数据
     receiveSignal = data(fid:fid + blksize - 1);
-    fid = fid + blksize ;
+    fid = fid + blksize;
 
     if 1 == settings.PLLFlag
         startCountPhase = startCountPhase + 1;
@@ -65,8 +64,8 @@ for loopNum = 1 : settings.msToProcess
             codeStartPhaseSum = codeStartPhaseSum + trackResult.codeNcoPhases(loopNum);
         end
     else     
-        if startCountPhase >= -10
-            startCountPhase = -15;
+        if startCountPhase >= -5
+            startCountPhase = -10;
             carrStartPhaseSum = 0;
             codeStartPhaseSum = 0;
         end
@@ -141,7 +140,7 @@ for loopNum = 1 : settings.msToProcess
         Q_P_final(nIQ - 1) = Q_P_final(nIQ);
        if 0 == settings.PLLFlag  && abs(outputFll(n))<10  %锁频环工作状态下，信号与本地频差小于10时
             loopCount = loopCount + 1;
-            if  loopCount>200            
+            if  loopCount>20            
                    settings.PLLFlag = 1;
             end
        elseif  1 == settings.PLLFlag && abs(outputFll(n))>30      %在锁相环工作状态下，锁频环所鉴出的信号与本地频差大于30时

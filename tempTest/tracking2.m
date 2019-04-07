@@ -27,16 +27,11 @@ trackResult2.carrNcoPhases = zeros(1,settings.msToProcess);       %Ã¿´Î»ı·ÖÇåÁãÇ
 trackResult2.carrFreq = zeros(1,settings.msToProcess);
 trackResult2.trackFlag = 0;                  %²¶»ñ³É¹¦±êÖ¾Î»
 blksize = round(settings.samplingFreq * settings.Tcoh);
-startCountPhase = -100;
+startCountPhase = -150;
 carrStartPhaseSum = 0;
 for loopNum = 1 : settings.msToProcess
-    carrNcoPhase = mod(carrierNcoSum,2^settings.ncoLength) * 2 * pi;  
-    if carrNcoPhase > pi*2^settings.ncoLength
-        trackResult2.carrNcoPhases(loopNum) = ...
-             ((carrNcoPhase - 2*pi*2^settings.ncoLength)/2*pi);
-    else
-        trackResult2.carrNcoPhases(loopNum) = (carrNcoPhase/2*pi);
-    end    
+    carrNcoPhase = mod(carrierNcoSum,2^settings.ncoLength);  
+    trackResult2.carrNcoPhases(loopNum) = carrNcoPhase;
     trackResult2.carrFreq(loopNum) = ...
          (settings.middleFreqNco2 + fllNcoAdder + pllNcoAdder)/settings.transferCoef;
     trackResult2.flag(loopNum) = settings.PLLFlag;         %±êÊ¶¸Ã´ÎÑ­»·ÓĞÃ»ÓĞ½øĞĞPLLËø¶¨
@@ -51,8 +46,8 @@ for loopNum = 1 : settings.msToProcess
             carrStartPhaseSum = carrStartPhaseSum + trackResult2.carrNcoPhases(loopNum);
         end
     else     
-        if startCountPhase >= -10
-            startCountPhase = -15;
+        if startCountPhase >= -5
+            startCountPhase = -10;
             carrStartPhaseSum = 0;
 
         end
@@ -112,7 +107,7 @@ for loopNum = 1 : settings.msToProcess
         Q_P_final(nIQ - 1) = Q_P_final(nIQ);
        if 0 == settings.PLLFlag  && abs(outputFll(n))<10  %ËøÆµ»·¹¤×÷×´Ì¬ÏÂ£¬ĞÅºÅÓë±¾µØÆµ²îĞ¡ÓÚ10Ê±
             loopCount = loopCount + 1;
-            if  loopCount>200            
+            if  loopCount>20            
                    settings.PLLFlag = 1;
             end
        elseif  1 == settings.PLLFlag && abs(outputFll(n))>30      %ÔÚËøÏà»·¹¤×÷×´Ì¬ÏÂ£¬ËøÆµ»·Ëù¼ø³öµÄĞÅºÅÓë±¾µØÆµ²î´óÓÚ30Ê±

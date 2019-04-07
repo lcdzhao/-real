@@ -14,5 +14,5 @@ function [local_early_code,local_prompt_code,local_late_code,local_phase]=localc
         end
     end
     local_early_code = code_temp;
-    local_prompt_code = [local_early_code_last(Ncoh-2:Ncoh),local_early_code(1:Ncoh-3)];
-    local_late_code = [local_early_code_last(Ncoh-5:Ncoh),local_early_code(1:Ncoh-6)];
+    local_prompt_code = [local_early_code_last(Ncoh-settings.dllCorrelatorLength+1:Ncoh),local_early_code(1:Ncoh-settings.dllCorrelatorLength)];
+    local_late_code = [local_early_code_last(Ncoh-2*settings.dllCorrelatorLength+1:Ncoh),local_early_code(1:Ncoh-2 * settings.dllCorrelatorLength)];

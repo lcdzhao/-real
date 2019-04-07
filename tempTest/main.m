@@ -14,7 +14,7 @@ for delay_point_index = 1:length(delay_points)
     spread_code= zeros(0,0);            
     little_spread_code = [ samplecacodes...
         samplecacodes samplecacodes samplecacodes samplecacodes];
-    for i = 1:201
+    for i = 1:101
         spread_code = [spread_code little_spread_code];
     end
     %figure(3);
@@ -26,14 +26,14 @@ for delay_point_index = 1:length(delay_points)
     sendeddataL1=spread_code.*cos(2*pi*settings.IF1.*t);     %L1,´îÔØÎ±Âë
     sendeddataL2=cos(2*pi*settings.IF2.*t);                  %L2,²»´îÔØÎ±Âë
     sendeddata = sendeddataL1 + sendeddataL2;
-    sendeddata =  sendeddata((delay_points(delay_point_index) + 1):length(spread_code));
+    sendeddata =  sendeddata((delay_points(delay_point_index + 1)):length(spread_code));
     % ¼ÓÔëÉù
     data= awgn(sendeddata, -10); 
 
     acqResult = acquisition(data,settings);
 
     trackResult1 = tracking(1,acqResult,settings,data);
-    trackResult2 = tracking(1,acqResult,settings,data);
+    trackResult2 = tracking2(1,acqResult,settings,data);
     finalDistances = calculatePseudoranges(...
                 trackResult1, ...
                 trackResult2,...
