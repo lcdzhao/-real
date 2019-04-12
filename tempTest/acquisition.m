@@ -22,7 +22,7 @@ phasePoints = (0 : (samplesPerCode-1)) * 2 * pi * ts;
 numberOfFrqBins = round(settings.acqSearchBand * 2) + 1;
 
 % Generate all C/A codes and sample them according to the sampling freq.
-caCodeTable = makeCaTable(settings.PRN,settings.codeLength,settings.codeFreqBasis ,settings.samplingFreq);
+caCodeTable = makeCaTable(0,settings.PRN,settings.codeLength,settings.codeFreqBasis ,settings.samplingFreq);
 
 
 %--- Initialize arrays to speed up the code -------------------------------

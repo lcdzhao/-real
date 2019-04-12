@@ -4,17 +4,19 @@ clear
 settings = initSettings();
 distenses = input('Please enter distences:');
 delay_times = distenses/settings.c;
-delay_points = round((delay_times/settings.CA_Period) * settings.samplesPerCode);
+%delay_points = round((delay_times/settings.CA_Period) * settings.samplesPerCode);
 % 产生伪随机码,看cacode.m
 w_code=cacode(settings.PRN);
-%对CA码进行采样
-samplecacodes = makeCaTable(settings.PRN,settings.codeLength,settings.codeFreqBasis ,settings.samplingFreq);
+
+
 % 扩频，应该点乘离散的数据码
-for delay_point_index = 1:length(delay_points)
+for delay_point_index = 1:length(delay_times)
+    %对CA码进行采样
+    samplecacodes = makeCaTable(delay_times(delay_point_index),settings.PRN,settings.codeLength,settings.codeFreqBasis ,settings.samplingFreq);
     spread_code= zeros(0,0);            
     little_spread_code = [ samplecacodes...
         samplecacodes samplecacodes samplecacodes samplecacodes];
-    for i = 1:101
+    for i = 1:21
         spread_code = [spread_code little_spread_code];
     end
     %figure(3);
@@ -22,11 +24,10 @@ for delay_point_index = 1:length(delay_points)
     %title('扩频后的数据')
 
     %调制
-    t = (0:(length(spread_code) - 1))/settings.samplingFreq;
-    sendeddataL1=spread_code.*cos(2*pi*settings.IF1.*t);     %L1,搭载伪码
+    t = (0:(length(spread_code) - 1))/settings.samplingFreq + delay_times(delay_point_index);
+    sendeddataL1=spread_code.*cos(2*pi*settings.IF1.*t);     %L1,搭载伪码 
     sendeddataL2=cos(2*pi*settings.IF2.*t);                  %L2,不搭载伪码
     sendeddata = sendeddataL1 + sendeddataL2;
-    sendeddata =  sendeddata((delay_points(delay_point_index + 1)):length(spread_code));
     % 加噪声
     data= awgn(sendeddata, -10); 
 
