@@ -22,7 +22,8 @@ phasePoints = (0 : (samplesPerCode-1)) * 2 * pi * ts;
 numberOfFrqBins = round(settings.acqSearchBand * 2) + 1;
 
 % Generate all C/A codes and sample them according to the sampling freq.
-caCodeTable = makeCaTable(0,settings.PRN,settings.codeLength,settings.codeFreqBasis ,settings.samplingFreq);
+caCodeTable = makeCaTable(0,settings.PRN,...
+    settings.codeLength,settings.codeFreqBasis ,settings.samplingFreq,settings);
 
 
 %--- Initialize arrays to speed up the code -------------------------------
@@ -136,7 +137,7 @@ frqBins     = zeros(1, numberOfFrqBins);
 %         codeValueIndex = floor((ts * (1:10*samplesPerCode)) / ...
 %                                (1/settings.codeFreqBasis));
 %                            
-%         longCaCode = caCode((rem(codeValueIndex, 1023) + 1));
+%         longCaCode = caCode((rem(codeValueIndex, settings.codeLength) + 1));
 %     
 %         %--- Remove C/A code modulation from the original signal ----------
 %         % (Using detected C/A code phase),剥离C/A码，然后对信号进行傅里叶变换，找到最大的频率点。

@@ -2,7 +2,7 @@ function trackResult = tracking(fid, acqResult, settings,data)
 %% test
 loopPara = loopCanshuCalculate(settings);%计算环路滤波器参数
 
-codeTable = cacode(settings.PRN);          %调用函数，产生伪随机码
+codeTable = cacode(settings.PRN,settings);          %调用函数，产生伪随机码
 
 fllNcoAdder = 0;                   %fll  NCO加法器，应该在滤波器中使用
 carrierNcoSum = 0;                 %给这个值再乘2*pi就是相位了
@@ -25,7 +25,7 @@ Tcoh = settings.Tcoh;          %积分清零时间
 global earlyCodeNco;      %是接收端的，因为早码的话，即时码和晚码都可以从其中而来
 earlyCodeNco = ((1 - (acqResult.codePhase-settings.dllCorrelatorLength)/settings.samplesPerCode)...
     *settings.codeLength) * 2^settings.ncoLength;
-earlyCodeNco = mod(earlyCodeNco,2^settings.ncoLength*1023);
+earlyCodeNco = mod(earlyCodeNco,2^settings.ncoLength*settings.codeLength);
 localEarlyCodeLast = localEarlycodeInitial(settings,codeTable); %产生本地超前码，接收端使用，因为早码的话，即时码和晚码都可以从其中而来
 
 trackResult.carrNcoPhases = zeros(1,settings.msToProcess);       %每次积分清零前载波的nco相位,未经过转换
@@ -33,14 +33,11 @@ trackResult.codeNcoPhases = zeros(1,settings.msToProcess);       %每次积分清零前
 trackResult.carrFreq = zeros(1,settings.msToProcess);
 trackResult.trackFlag = 0;                  %捕获成功标志位
 blksize = settings.codeSplitSpace * settings.samplesPerCode;
-startCountPhase = -45;
+startCountPhase = -100;
 carrStartPhaseSum = 0;
 codeStartPhaseSum = 0;
 for loopNum = 1 : settings.msToProcess
-    
-    
-    
-    
+
     carrNcoPhase = mod(carrierNcoSum,2^settings.ncoLength);  
     trackResult.carrNcoPhases(loopNum) = carrNcoPhase;
     
@@ -80,7 +77,7 @@ for loopNum = 1 : settings.msToProcess
     
     codeNcoSum = codeNcoAdder + settings.codeWord ...              %本地再生码环NCO,和上面的carrierNcoSum作用一样,2048为基准
         + fllNcoAdder*settings.cofeFLLAuxiDDLL;                
-  
+
      %产生本地超前，即时，滞后码
     [localEarlyCode,localPromptCode,localLateCode,settings.localPhase]=localcodeGenerate(localEarlyCodeLast,codeNcoSum,codeTable,settings);
     localEarlyCodeLast = localEarlyCode;

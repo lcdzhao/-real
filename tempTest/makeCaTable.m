@@ -1,4 +1,5 @@
-function caCodesTable = makeCaTable(delayTime,PRN,codeLength,chiprate,samplingFreq)
+function caCodesTable = makeCaTable(delayTime,PRN,...
+    codeLength,chiprate,samplingFreq,settings)
 %Function generates CA codes for all 32 satellites based on the settings
 %provided in the structure "settings". The codes are digitized at the
 %sampling frequency specified in the settings structure.
@@ -20,7 +21,7 @@ tc = 1/chiprate;  % C/A chip period in sec
 %=== For all satellite PRN-s ...
 
     %--- Generate CA code for given PRN -----------------------------------
-    caCode = cacode(PRN);
+    caCode = cacode(PRN,settings);
  
     %=== Digitizing =======================================================
     
@@ -29,9 +30,9 @@ tc = 1/chiprate;  % C/A chip period in sec
     %（因为一个C/A代码周期是一毫秒）。.
     %ts是多少次采样一次，tc是码的变换时间，将ts投影到tc
     codeValueIndex = ceil((ts * (1:samplesPerCode) + delayTime) / tc);
-    codeValueIndex = mod(codeValueIndex,1023);
+    codeValueIndex = mod(codeValueIndex,settings.codeLength);
     %--- Correct the last index (due to number rounding issues) -----------
-    codeValueIndex(find(codeValueIndex == 0)) = 1023;
+    codeValueIndex(find(codeValueIndex == 0)) = settings.codeLength;
     
     %--- Make the digitized version of the C/A code -----------------------
     % The "upsampled" code is made by selecting values form the CA code

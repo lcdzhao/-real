@@ -8,7 +8,7 @@ function [pseudoranges] = calculatePseudoranges( ...
 
     %--- Compute the travel times -----------------------------------------    
     travelTime1 = ...
-        (trackResult1.codePhase/settings.codeLength) * settings.CA_Period/2^settings.ncoLength ;
+        (trackResult1.codePhase/settings.codeLength) * settings.CA_Period/2^settings.ncoLength;
     
     phaseDiff = trackResult2.carrPhase - trackResult1.carrPhase;
     if phaseDiff < 0

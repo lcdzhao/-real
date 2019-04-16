@@ -6,17 +6,18 @@ distenses = input('Please enter distences:');
 delay_times = distenses/settings.c;
 %delay_points = round((delay_times/settings.CA_Period) * settings.samplesPerCode);
 % 产生伪随机码,看cacode.m
-w_code=cacode(settings.PRN);
+w_code=cacode(settings.PRN,settings);
 
 
 % 扩频，应该点乘离散的数据码
 for delay_point_index = 1:length(delay_times)
     %对CA码进行采样
-    samplecacodes = makeCaTable(delay_times(delay_point_index),settings.PRN,settings.codeLength,settings.codeFreqBasis ,settings.samplingFreq);
+    samplecacodes = makeCaTable(delay_times(delay_point_index),...
+        settings.PRN,settings.codeLength,settings.codeFreqBasis ,settings.samplingFreq,settings);
     spread_code= zeros(0,0);            
     little_spread_code = [ samplecacodes...
         samplecacodes samplecacodes samplecacodes samplecacodes];
-    for i = 1:21
+    for i = 1:(settings.msToProcess/5)+1
         spread_code = [spread_code little_spread_code];
     end
     %figure(3);

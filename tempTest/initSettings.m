@@ -3,7 +3,7 @@ function settings = initSettings()
 % Number of milliseconds to be processed used 36000 + any transients (see
 % below - in Nav parameters) to ensure nav subframes are provided
 %
-settings.msToProcess        = 100;        %[ms]需要处理的毫秒数
+settings.msToProcess        = 200;        %[ms]需要处理的毫秒数
 
 settings.PRN = 18;
 
@@ -15,9 +15,9 @@ settings.ncoLength = 32;                   %方便计算
 
 
 % Intermediate, sampling and code frequencies
-settings.IF1                 = 1.548e7 %1.42e6 %4.123968e6;      %[Hz]   %L1中频
-settings.freqDiff           = 10e7;                                 %频差
-settings.samplingFreq       = 38.192e7 %5.714e6 %16.367667e6;     %[Hz] %采样频率比
+settings.IF1                 = 9.548e6; %1.42e6 %4.123968e6;      %[Hz]   %L1中频
+settings.freqDiff           = 1e6;                                 %频差
+settings.samplingFreq       = 38.192e6; %5.714e6 %16.367667e6;     %[Hz] %采样频率比
 settings.codeFreqBasis      = 1.023e6;      %[Hz]   %码元的基频
 settings.IF2                 = settings.IF1 + settings.freqDiff; %1.42e6 %4.123968e6;      %[Hz]   %L2中频
 % Define number of chips in a code period

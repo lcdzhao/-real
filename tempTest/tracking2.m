@@ -2,7 +2,7 @@ function trackResult2 = tracking2(fid, acqResult, settings,data)
 %% test
 loopPara = loopCanshuCalculate(settings);%¼ÆËã»·Â·ÂË²¨Æ÷²ÎÊı
 
-codeTable = cacode(settings.PRN);          %µ÷ÓÃº¯Êı£¬²úÉúÎ±Ëæ»úÂë
+%codeTable = cacode(settings.PRN);          %µ÷ÓÃº¯Êı£¬²úÉúÎ±Ëæ»úÂë
 
 fllNcoAdder = 0;                   %fll  NCO¼Ó·¨Æ÷£¬Ó¦¸ÃÔÚÂË²¨Æ÷ÖĞÊ¹ÓÃ
 carrierNcoSum = 0;                 %¸øÕâ¸öÖµÔÙ³Ë2*pi¾ÍÊÇÏàÎ»ÁË
@@ -27,7 +27,7 @@ trackResult2.carrNcoPhases = zeros(1,settings.msToProcess);       %Ã¿´Î»ı·ÖÇåÁãÇ
 trackResult2.carrFreq = zeros(1,settings.msToProcess);
 trackResult2.trackFlag = 0;                  %²¶»ñ³É¹¦±êÖ¾Î»
 blksize = round(settings.samplingFreq * settings.Tcoh);
-startCountPhase = -40;
+startCountPhase = -100;
 carrStartPhaseSum = 0;
 for loopNum = 1 : settings.msToProcess
     carrNcoPhase = mod(carrierNcoSum,2^settings.ncoLength);  
