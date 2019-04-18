@@ -106,6 +106,7 @@ for loopNum = 1 : settings.msToProcess
 % %         四象限反正切鉴频器
         dotFll = I_P_final(nIQ - 1) * I_P_final(nIQ) + Q_P_final(nIQ - 1) * Q_P_final(nIQ);
         crossFll = I_P_final(nIQ - 1) * Q_P_final(nIQ) - I_P_final(nIQ) * Q_P_final(nIQ - 1);
+        
         outputFll(n) = atan2(crossFll,dotFll)/(Tcoh*2*pi); 
         trackResult.FllDiscr(loopNum) = outputFll(n);
         

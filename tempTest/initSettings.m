@@ -12,6 +12,8 @@ settings.PRN = 18;
 % This is a "default" name of the data file (signal record) to be used in
 % the post-processing mode
 settings.ncoLength = 32;                   %∑Ω±„º∆À„
+%settings.addFastMultiple = 1e3
+
 
 
 % Intermediate, sampling and code frequencies

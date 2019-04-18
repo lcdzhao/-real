@@ -17,7 +17,7 @@ for delay_point_index = 1:length(delay_times)
     spread_code= zeros(0,0);            
     little_spread_code = [ samplecacodes...
         samplecacodes samplecacodes samplecacodes samplecacodes];
-    for i = 1:(settings.msToProcess/5)+1
+    for i = 1:(settings.msToProcess * settings.codeSplitSpace/5)+1
         spread_code = [spread_code little_spread_code];
     end
     %figure(3);
