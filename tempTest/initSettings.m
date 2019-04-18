@@ -3,7 +3,7 @@ function settings = initSettings()
 % Number of milliseconds to be processed used 36000 + any transients (see
 % below - in Nav parameters) to ensure nav subframes are provided
 %
-settings.msToProcess        = 200;        %[ms]需要处理的毫秒数
+settings.msToProcess        = 230;        %[ms]需要处理的毫秒数
 
 settings.PRN = 18;
 
