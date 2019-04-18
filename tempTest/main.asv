@@ -14,7 +14,7 @@ for delay_point_index = 1:length(delay_times)
     %对CA码进行采样
     samplecacodes = makeCaTable(delay_times(delay_point_index),...
         settings.PRN,settings.codeLength,settings.codeFreqBasis ,settings.samplingFreq,settings);
-    spread_code= [samplecacodes samplecacodes];            
+    spread_code= [samplecacodes ];              
 
     
     %figure(3);

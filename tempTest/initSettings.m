@@ -17,9 +17,9 @@ settings.ncoLength = 32;                   %方便计算
 
 
 % Intermediate, sampling and code frequencies
-settings.IF1                 = 9.548e6; %1.42e6 %4.123968e6;      %[Hz]   %L1中频
-settings.freqDiff           = 1e6;                                 %频差
-settings.samplingFreq       = 38.192e6; %5.714e6 %16.367667e6;     %[Hz] %采样频率比
+settings.IF1                 = 250e6; %1.42e6 %4.123968e6;      %[Hz]   %L1中频
+settings.freqDiff           = 40e6;                                 %频差
+settings.samplingFreq       = 613.8e6; %5.714e6 %16.367667e6;     %[Hz] %采样频率比
 settings.codeFreqBasis      = 1.023e6;      %[Hz]   %码元的基频
 settings.IF2                 = settings.IF1 + settings.freqDiff; %1.42e6 %4.123968e6;      %[Hz]   %L2中频
 % Define number of chips in a code period

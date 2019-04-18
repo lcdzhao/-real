@@ -35,10 +35,10 @@ for loopNum = 1 : settings.msToProcess
     trackResult2.carrFreq(loopNum) = ...
          (settings.middleFreqNco2 + fllNcoAdder + pllNcoAdder)/settings.transferCoef;
     trackResult2.flag(loopNum) = settings.PLLFlag;         %标识该次循环有没有进行PLL锁定
-    %读取接收数据
-    
+   
+    %读取接收数据，因为数据是循环的，所以这里是这样   
     receiveSignal = data(fid:fid + blksize - 1);
-    fid = fid + blksize ;
+ %   fid = fid + blksize ;
 
     if 1 == settings.PLLFlag
         startCountPhase = startCountPhase + 1;
