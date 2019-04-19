@@ -130,18 +130,19 @@ for loopNum = 1 : settings.msToProcess
         I_P_final(nIQ - 1) = I_P_final(nIQ);
         Q_P_final(nIQ - 1) = Q_P_final(nIQ);
     else
-        %--- FLL四象限反正切鉴频器,进行环路滤波，并保存结果 ------------------------
-        dotFll = I_P_final(nIQ - 1) * I_P_final(nIQ) + Q_P_final(nIQ - 1) * Q_P_final(nIQ);
-        crossFll = I_P_final(nIQ - 1) * Q_P_final(nIQ) - I_P_final(nIQ) * Q_P_final(nIQ - 1);       
-        outputFll(n) = atan2(crossFll,dotFll)/(Tcoh*2*pi); 
-        trackResult.fllDiscr(loopNum) = outputFll(n);
-        outputFilterFll(n) = (loopPara.cofeone_FLL * outputFll(n)) + (loopPara.cofetwo_FLL * outputFll(n - 1)) + (2 * outputFilterFll(n - 1)) - outputFilterFll(n - 2);
-        trackResult.fllDiscrFilt(loopNum) = outputFilterFll(n);
-        fllNcoAdder = outputFilterFll(n) * settings.transferCoef ;  %频率字转换      
-        outputFll(n - 1)=outputFll(n);
-        outputFilterFll(n - 2)=outputFilterFll(n - 1);
-        outputFilterFll(n - 1)=outputFilterFll(n);
-        
+        if settings.PLLFlag == 0
+            %--- FLL四象限反正切鉴频器,进行环路滤波，并保存结果 ------------------------
+            dotFll = I_P_final(nIQ - 1) * I_P_final(nIQ) + Q_P_final(nIQ - 1) * Q_P_final(nIQ);
+            crossFll = I_P_final(nIQ - 1) * Q_P_final(nIQ) - I_P_final(nIQ) * Q_P_final(nIQ - 1);       
+            outputFll(n) = atan2(crossFll,dotFll)/(Tcoh*2*pi); 
+            trackResult.fllDiscr(loopNum) = outputFll(n);
+            outputFilterFll(n) = (loopPara.cofeone_FLL * outputFll(n)) + (loopPara.cofetwo_FLL * outputFll(n - 1)) + (2 * outputFilterFll(n - 1)) - outputFilterFll(n - 2);
+            trackResult.fllDiscrFilt(loopNum) = outputFilterFll(n);
+            fllNcoAdder = outputFilterFll(n) * settings.transferCoef ;  %频率字转换      
+            outputFll(n - 1)=outputFll(n);
+            outputFilterFll(n - 2)=outputFilterFll(n - 1);
+            outputFilterFll(n - 1)=outputFilterFll(n);
+        end
         if settings.PLLFlag == 1
              %--- FLL鉴相，进行环路滤波，并保存结果 ------------------------
             outputPll(n) = atan2(Q_P_final(nIQ),I_P_final(nIQ)); 

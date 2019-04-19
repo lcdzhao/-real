@@ -52,4 +52,6 @@ for delay_point_index = 1:length(delay_times)
         distenses(delay_point_index) - finalDistances.pseudorange2 , ...
          (distenses(delay_point_index) - finalDistances.pseudorange2)/distenses(delay_point_index) ...
     );
+    
+    a = 1;  %test
 end
