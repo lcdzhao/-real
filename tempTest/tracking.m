@@ -52,7 +52,7 @@ localEarlyCodeLast = localEarlycodeInitial(settings,codeTable); %²úÉú±¾µØ³¬Ç°Âë£
 
 %--- ¸ú×ÙÉèÖÃ ----------------------------------------------------------
 trackResult.trackFlag = 0;                  %¸ú×Ù³É¹¦±êÖ¾Î»
-startCountPhase = -210;                     %½øĞĞÏàÎ»ÊÕ¼¯µÄ´ÎÊı
+startCountPhase = -200;                     %½øĞĞÏàÎ»ÊÕ¼¯µÄ´ÎÊı
 carrStartPhaseSum = 0;                      %ÔØ²¨ÏàÎ»ÆğÊ¼µãÊÕ¼¯µÄ´ÎÊı
 codeStartPhaseSum = 0;                      %CAÂëÏàÎ»ÆğÊ¼µãÊÕ¼¯µÄ´ÎÊı
 
