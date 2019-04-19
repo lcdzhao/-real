@@ -1,7 +1,7 @@
 function settings = initSettings()
 %% 处理设置 ====================================================
 
-settings.msToProcess        = 230;        %[ms]需要处理的毫秒数
+settings.msToProcess        = 250;        %[ms]需要处理的毫秒数
 
 settings.PRN = 18;                        %伪码的编号，不同编号，伪码序列不同
 
