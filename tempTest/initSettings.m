@@ -35,7 +35,7 @@ settings.K = 1;                             %环路增益
 
 % DDLL参数设置
 settings.DDLLBandwidth = 2;                %码环滤波噪声带宽
-settings.cofeFLLAuxiDDLL  = 1/763;         %载波辅助系数,码率/载波频率
+settings.cofeFLLAuxiDDLL  = settings.codeFreqBasis/settings.IF1;         %载波辅助系数,码率/载波频率
 settings.dllCorrelatorLength = 18;         %相关计算时的码距
 
 % FLL 参数设置
@@ -74,7 +74,7 @@ settings.Ncoh =  settings.codeSplitSpace * ...
 settings.Tcoh = settings.Ncoh *settings.sampleT;                           %积分清除时间
 settings.dotLength = [1:settings.Ncoh];                                    %一个积分清除时间内的采样点数
 settings.codeWord = settings.codeFreqBasis * settings.transferCoef;        %码环控制字
-settings.fdCode = settings.dupFreq*(1/763)*settings.transferCoef;          %添加在信号源的码上的多普勒，体现在码NCO上
+settings.fdCode = settings.dupFreq*(settings.cofeFLLAuxiDDLL)*settings.transferCoef;          %添加在信号源的码上的多普勒，体现在码NCO上
 
 
 %% 初始值设置
