@@ -1,5 +1,5 @@
 function trackResult2 = tracking2(fid, acqResult, settings,data)
-% 这里和tracking1相同，因此不再细加注释
+%
 %% 初始化 ----------------------------------------------------------
 loopPara = loopCanshuCalculate(settings);%计算环路滤波器参数
 
@@ -7,15 +7,15 @@ loopPara = loopCanshuCalculate(settings);%计算环路滤波器参数
 
 fllNcoAdder = 0;                   %fll  NCO加法器，应该在滤波器中使用
 carrierNcoSum = 0;                 %给这个值再乘2*pi就是相位了
-pllNcoAdder = 0;                   %pll  NCO加法器
+pllNcoAdder = 0;                   %pll  NCO加法器，应该在滤波器中使用
 loopCount = 0;                      %循环次数
 
 nIQ = 2;                            
 n = 3;
-outputFll(2:3) = 0;                %fll鉴频器的输出
+outputFll(2:3) = 0;                 %这里面大概是fll鉴频器的输出
 outputFilterFll(1:3) = 0;          %fll 环路滤波器的输出
 outputFilterPll(1:3) = 0;          %pll 环路滤波器的输出
-outputPll(2:3) = 0;                %pll 鉴频器的输出
+outputPll(2:3) = 0;                 %pll 鉴频器的输出
 
 trackResult2.pllDiscrFilter = zeros(1,settings.msToProcess);
 
@@ -88,18 +88,21 @@ for loopNum = 1 : settings.msToProcess
         outputFilterFll(n - 2)=outputFilterFll(n - 1);
         outputFilterFll(n - 1)=outputFilterFll(n);
         
-        if settings.PLLFlag == 1
+         if settings.PLLFlag == 1
             %锁相环鉴相器
             outputPll(n) = atan2(Q_P_final(nIQ),I_P_final(nIQ)); 
             outputFilterPll(n) = loopPara.cofeone_PLL*outputPll(n) + loopPara.cofetwo_PLL*outputPll(n-1)+loopPara.cofethree_PLL*outputPll(n-2)+2*outputFilterPll(n-1)-outputFilterPll(n-2);
             trackResult2.pllDiscr(loopNum) = outputPll(n);
             trackResult2.pllDiscrFilter(loopNum) = outputFilterPll(n);
             pllNcoAdder = (outputFilterPll(n)/(2*pi)) * settings.transferCoef;  %频率字转换
+            
+%             outputPll(1:2) = outputPll(2:3);
+%             outputFilterPll(1:2) = outputFilterPll(2:3);
             outputPll(n-2) = outputPll(n-1);
             outputPll(n-1) = outputPll(n);
             outputFilterPll(n-2) = outputFilterPll(n-1);
             outputFilterPll(n-1) = outputFilterPll(n);
-        end
+         end
         
         I_P_final(nIQ - 1) = I_P_final(nIQ);
         Q_P_final(nIQ - 1) = Q_P_final(nIQ);
