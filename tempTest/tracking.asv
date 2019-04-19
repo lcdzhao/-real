@@ -75,7 +75,7 @@ for loopNum = 1 : settings.msToProcess
         carrierNcoSum = carrierNcoSum + settings.middleFreqNco1 + fllNcoAdder + pllNcoAdder ;%本地再生载波NCO
     end
     
-    
+    codeNcoSum = codeNcoAdder + settings.codeWord
     
     codeNcoSum = codeNcoAdder + settings.codeWord ...              %本地再生码环NCO,和上面的carrierNcoSum作用一样,2048为基准
         + fllNcoAdder*settings.cofeFLLAuxiDDLL;                

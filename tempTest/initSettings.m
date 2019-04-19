@@ -1,92 +1,85 @@
 function settings = initSettings()
-%% Processing settings ====================================================
-% Number of milliseconds to be processed used 36000 + any transients (see
-% below - in Nav parameters) to ensure nav subframes are provided
-%
+%% 处理设置 ====================================================
+
 settings.msToProcess        = 230;        %[ms]需要处理的毫秒数
 
-settings.PRN = 18;
+settings.PRN = 18;                        %伪码的编号，不同编号，伪码序列不同
 
 
-%% Raw signal file name and other parameter ========原始信号文件名和其它参数=======================
-% This is a "default" name of the data file (signal record) to be used in
-% the post-processing mode
-settings.ncoLength = 32;                   %方便计算
-%settings.addFastMultiple = 1e3
+%% 基本参数设置 ===========================================================
+
+settings.ncoLength = 32;                        %字长，方便计算，提高精度
+
+settings.IF1                 = 250e6;            %[Hz]   L1中频
+settings.freqDiff           = 40e6;              %[HZ]   频差
+settings.samplingFreq       = 613.8e6;           %[Hz]   采样频率比
+settings.codeFreqBasis      = 1.023e6;           %[Hz]   码元的基频
+settings.IF2                 = settings.IF1 + settings.freqDiff;   %[Hz]    L2中频
 
 
+settings.codeLength         = 1023;              %一个伪码周期的码元数
+settings.sampleT = 1/settings.samplingFreq;      %采样时间
 
-% Intermediate, sampling and code frequencies
-settings.IF1                 = 250e6; %1.42e6 %4.123968e6;      %[Hz]   %L1中频
-settings.freqDiff           = 40e6;                                 %频差
-settings.samplingFreq       = 613.8e6; %5.714e6 %16.367667e6;     %[Hz] %采样频率比
-settings.codeFreqBasis      = 1.023e6;      %[Hz]   %码元的基频
-settings.IF2                 = settings.IF1 + settings.freqDiff; %1.42e6 %4.123968e6;      %[Hz]   %L2中频
-% Define number of chips in a code period
-settings.codeLength         = 1023;     %一个码元周期的“片”数
-%每个CA码周期的采样数，整数倍不好38192
-settings.samplesPerCode = round(settings.samplingFreq /(settings.codeFreqBasis/settings.codeLength));  %一个码元有多少个采样点
 
-%% Acquisition settings ==============捕获设置=====================================
-% Skips acquisition in the script postProcessing.m if set to 1
-%如果设置为1
-settings.skipAcquisition    = 0;
-% List of satellites to look for. Some satellites can be excluded to speed
-% up acquisition    %所搜寻的卫星列表，可以排除一些卫星以加快捕获
-%settings.acqSatelliteList   = 1:32;         %[PRN numbers]  %捕获的卫星列表
-% Band around IF to search for satellite signal. Depends on max Doppler
-%由最大多普勒频率决定
-settings.acqSearchBand      = 10;           %[kHz]
-% Threshold for the signal presence decision rule
+%一个伪码码元有多少个采样点
+settings.samplesPerCode = round(settings.samplingFreq /(settings.codeFreqBasis/settings.codeLength));  
+
+%%  捕获设置==========================================================
+
+settings.acqSearchBand      = 10;           %[kHz]  捕获时的带宽
+
 settings.acqThreshold       = 2.5;  %判决阈值
 
-%% Tracking loops settings =============跟踪环路设置===================================
-% Code tracking loop parameters     码跟踪环路参数
-settings.FLLFlag = 1;                      %FLL标志，因为刚开始用FLL所以初始时FLL的标志为1
-settings.PLLFlag = 0;                      %和上面的同理
-settings.FLLBandwidth = 4.2;               %FLL噪声带宽
-settings.PLLBandwidth = 10;                %PLL噪声带宽
-settings.DDLLBandwidth = 2;                %码环滤波噪声带宽
-settings.cofeFLLAuxiDDLL  = 1/763;       %载波辅助系数,码率/载波频率
-settings.dllCorrelatorSpacing = 0.5;
-settings.dllCorrelatorLength = 18;
-
-
-%% Plot settings ==========================================================
-% Enable/disable plotting of the tracking results for each channel
-settings.plotTracking       = 1;            % 0 - Off
-                                            % 1 - On
-
-                                            
-%% Constants ==============================================================
-
-settings.c                  = 299792458;    % The speed of light, [m/s]
-settings.startOffset        = 0;       %[ms] Initial sign. travel time
-settings.CA_Period          = (1/settings.codeFreqBasis)*settings.codeLength;  % 每个CA码的周期
-
-%% 
-
-settings.dupFreq = 0;                     %多普勒频率
-settings.noiseStd = 1;
-% setting.length = (1:10000);
-% setting.length_no = 10000;
-settings.sampleT = 1/settings.samplingFreq; %采样时间
+%% 跟踪环路设置=======================================================
 settings.K = 1;                             %环路增益
 
+% DDLL参数设置
+settings.DDLLBandwidth = 2;                %码环滤波噪声带宽
+settings.cofeFLLAuxiDDLL  = 1/763;         %载波辅助系数,码率/载波频率
+settings.dllCorrelatorLength = 18;         %相关计算时的码距
 
-settings.transferCoef = (2^settings.ncoLength)/settings.samplingFreq;  %频率字转换系数，同时，将采样的频率还在其中
-settings.middleFreqNco1 = settings.IF1*settings.transferCoef;%中频1对应的频率字
-settings.middleFreqNco2 = settings.IF2*settings.transferCoef;%中频对应的频率字
-settings.codeSplitSpace = 1;  %积分清除时间占有一个伪码周期的几分之几
-settings.Ncoh =  settings.codeSplitSpace * (settings.samplingFreq / settings.codeFreqBasis )*settings.codeLength;%一个积分清除时间内的采样点数
-settings.Tcoh = settings.Ncoh *settings.sampleT;               %积分清除时间
-settings.dotLength = [1:settings.Ncoh];                        %一个积分清除时间内的采样点数
-settings.codeWord = settings.codeFreqBasis * settings.transferCoef;%码环控制字
-settings.fdCode = settings.dupFreq*(1/763)*settings.transferCoef;%添加在信号源的码上的多普勒，体现在码NCO上
-%setting.fd_code = setting.dup_freq*settings.cofe_FLL_auxi_DDLL*setting.transfer_coef;%添加在信号源的码上的多普勒，体现在码NCO上
+% FLL 参数设置
+settings.FLLFlag = 1;                      %FLL标志，因为刚开始用FLL所以初始时FLL的标志为1
+settings.FLLBandwidth = 4.2;               %FLL噪声带宽
+
+% PLL 参数设置
+settings.PLLFlag = 0;                      %和上面的同理
+settings.PLLBandwidth = 10;                %PLL噪声带宽
 
 
-settings.eCodeOriginalPhase = 0;         %nco扩频码早码的初相位
-settings.modulateCodeBiasPhsae = 0;      %调制时，本地B1码的初相位
-settings.signalPhase = 0;
-settings.localPhase = 0;
+
+
+                                            
+%% 常数设置 ===========================================================
+
+settings.c                  = 299792458;                                       % 光速, [m/s]
+settings.CA_Period          = (1/settings.codeFreqBasis)*settings.codeLength;  % 每个CA码的周期
+
+%% 多普勒频移设置及噪声设置 =====================================================
+settings.dupFreq = 0;                            %多普勒频率
+settings.noiseStd = 1;                           %噪声幅度
+
+
+
+
+
+
+%% 经过字转化后的各个参数 =====================================================
+settings.transferCoef = (2^settings.ncoLength)/settings.samplingFreq;      %频率字转换系数，同时，将采样的频率还在其中
+settings.middleFreqNco1 = settings.IF1*settings.transferCoef;              %中频1对应的频率字
+settings.middleFreqNco2 = settings.IF2*settings.transferCoef;              %中频对应的频率字
+settings.codeSplitSpace = 1;                                               %积分清除时间占有一个伪码周期的几分之几
+settings.Ncoh =  settings.codeSplitSpace * ...
+    (settings.samplingFreq / settings.codeFreqBasis )*settings.codeLength; %一个积分清除时间内的采样点数
+settings.Tcoh = settings.Ncoh *settings.sampleT;                           %积分清除时间
+settings.dotLength = [1:settings.Ncoh];                                    %一个积分清除时间内的采样点数
+settings.codeWord = settings.codeFreqBasis * settings.transferCoef;        %码环控制字
+settings.fdCode = settings.dupFreq*(1/763)*settings.transferCoef;          %添加在信号源的码上的多普勒，体现在码NCO上
+
+
+%% 初始值设置
+
+settings.modulateCodeBiasPhsae = 0;                   %发送端CA码的初相位
+settings.signalPhase = 0;                             %发送端载波的初相位
+settings.eCodeOriginalPhase = 0;                      %接收端CA码早码的初相位
+settings.localPhase = 0;                              %接收端载波的初相位
